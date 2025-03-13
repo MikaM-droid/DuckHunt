@@ -21,6 +21,7 @@ class Menu():
         self.game.reset_keys()
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Main menu
 
 class MainMenu(Menu):
     def __init__(self, game):
@@ -32,6 +33,7 @@ class MainMenu(Menu):
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
 
 #--------------------------------------------------------------------------------------------------------------------------
+# Draws text for the main menu
 
     def display_menu(self):
         self.run_display = True
@@ -47,6 +49,7 @@ class MainMenu(Menu):
             self.blit_screen()
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Scrolling through the menu
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -71,6 +74,7 @@ class MainMenu(Menu):
                 self.state = 'Options'
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Directs to the other page when clicked on enter
 
     def check_input(self):
         self.move_cursor()
@@ -79,12 +83,13 @@ class MainMenu(Menu):
                 self.game.playing = True
                 self.game.reset_keys()  # Added key reset after starting game
             elif self.state == 'Options':
-                pass
+                self.game.curr_menu = self.game.options
             elif self.state == 'Credits':
-                pass
+                self.game.curr_menu = self.game.credits
             self.run_display = False
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Options menu
 
 class OptionsMenu(Menu):
     def __init__(self, game):
@@ -109,4 +114,36 @@ class OptionsMenu(Menu):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-    #def check_input(self):
+    def check_input(self):
+        if self.game.BACK_KEY:
+            self.game.curr_menu = self.game.main_menu
+            self.run_display = False
+        elif self.game.UP_KEY or self.game.DOWN_KEY:
+            if self.state == 'Volume':
+                self.state = 'Controls'
+                self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
+            elif self.state == 'Controls':
+                self.state = 'Volume'
+                self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
+        elif self.game.START_KEY:
+            #To do Create a control and volume menu. this can be something else too depending on what I need for the game
+            pass
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Credits menu
+
+class CreditsMenu(Menu):
+    def __init__(self, game):
+        super().__init__(game)
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            if self.game.START_KEY or self.game.BACK_KEY:
+                self.game.curr_menu = self.game.main_menu
+                self.run_display = False
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text('Credits', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text('Made by Mikaela Monsma', 15, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 10)
+            self.blit_screen()

@@ -1,5 +1,5 @@
 import pygame
-from menu import MainMenu
+from menu import *
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -15,7 +15,10 @@ class Game():
         self.font_name = pygame.font.get_default_font()
         #self.font_name = 'Testtest.ttf'
         self.BLACK, self.WHITE = (0,0,0), (255,255,255)
-        self.curr_menu = MainMenu(self)
+        self.main_menu = MainMenu(self)
+        self.options = OptionsMenu(self)
+        self.credits = CreditsMenu(self)
+        self.curr_menu = self.main_menu
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
@@ -32,6 +35,7 @@ class Game():
             self.reset_keys()
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Set up for the keybinds
 
     def check_events(self):
         for event in pygame.event.get():
@@ -51,6 +55,7 @@ class Game():
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Draws the text onto the screen
 
     def draw_text(self, text, size, x,y):
         font = pygame.font.Font(self.font_name, size)
