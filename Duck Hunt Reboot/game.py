@@ -1,6 +1,5 @@
 import pygame
 from menu import *
-from Assets.Levels.levels import Level
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -16,15 +15,10 @@ class Game():
         self.font_name = pygame.font.get_default_font()
         #self.font_name = 'Testtest.ttf'
         self.BLACK, self.WHITE = (0,0,0), (255,255,255)
-
-        #Menu initializing
         self.main_menu = MainMenu(self)
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.curr_menu = self.main_menu
-
-        #Game initializing
-        self.level = Level(self)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
