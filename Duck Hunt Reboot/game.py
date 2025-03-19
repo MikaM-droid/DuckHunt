@@ -1,5 +1,6 @@
 import pygame
 from menu import *
+from Assets.Character.player import Player
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -19,6 +20,7 @@ class Game():
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.curr_menu = self.main_menu
+        self.player = Player(100, 500)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)

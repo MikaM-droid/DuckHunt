@@ -20,8 +20,7 @@ class Menu():
         pygame.display.update()
         self.game.reset_keys()
 
-#--------------------------------------------------------------------------------------------------------------------------
-#Main menu
+#######################################    Main menu    ###################################################################
 
 class MainMenu(Menu):
     def __init__(self, game):
@@ -88,8 +87,7 @@ class MainMenu(Menu):
                 self.game.curr_menu = self.game.credits
             self.run_display = False
 
-#--------------------------------------------------------------------------------------------------------------------------
-#Options menu
+#######################################    Options menu    #################################################################
 
 class OptionsMenu(Menu):
     def __init__(self, game):
@@ -105,7 +103,8 @@ class OptionsMenu(Menu):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
-            self.game.display.fill((0,0,0))
+            self.check_input()  # <-- Make sure to call this
+            self.game.display.fill((0, 0, 0))
             self.game.draw_text('Options', 20, self.game.DISPLAY_W/2, self.game.DISPLAY_H/2 - 30)
             self.game.draw_text('Volume', 15, self.volx, self.voly)
             self.game.draw_text('Controls', 15, self.controlsx, self.controlsy)
@@ -118,19 +117,19 @@ class OptionsMenu(Menu):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
             self.run_display = False
-        elif self.game.UP_KEY or self.game.DOWN_KEY:
+        elif self.game.UP_KEY:  # Separate UP and DOWN checks
+            if self.state == 'Controls':
+                self.state = 'Volume'
+                self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
+        elif self.game.DOWN_KEY:
             if self.state == 'Volume':
                 self.state = 'Controls'
                 self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
-            elif self.state == 'Controls':
-                self.state = 'Volume'
-                self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
         elif self.game.START_KEY:
-            #To do Create a control and volume menu. this can be something else too depending on what I need for the game
+            # TODO: Create a control and volume menu. 
             pass
 
-#--------------------------------------------------------------------------------------------------------------------------
-#Credits menu
+#######################################    Credits menu    ###############################################################
 
 class CreditsMenu(Menu):
     def __init__(self, game):
