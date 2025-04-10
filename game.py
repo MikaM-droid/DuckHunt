@@ -2,6 +2,7 @@ import pygame
 from menu import *
 from Assets.Character.player import Player
 from Assets.Levels.levels import LevelManager
+from timer import GameTimer
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -25,19 +26,23 @@ class Game():
         self.player = Player(100, 500, self.DISPLAY_W, self.DISPLAY_H)
         self.level_manager = LevelManager(self)
         self.paused = False
+        self.timer = GameTimer()  # Initialize the timer
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
 
     def game_loop(self):
         self.level_manager.start_level(1)  # Start with level 1
+        self.timer.start()  # Start the timer when the game starts
         while self.playing:
             self.check_events() # Checking the user input so it can act accordingly (key input)
             
             if self.BACK_KEY:  # Pause the game when backspace is pressed
                 self.paused = True
+                self.timer.pause()  # Pause the timer
                 self.pause_menu.display_menu()
                 self.paused = False
+                self.timer.resume()  # Resume the timer
                 self.reset_keys()
                 continue
                 
@@ -52,9 +57,14 @@ class Game():
                 self.player.move(pygame.key.get_pressed())
                 self.player.draw(self.display)
                 
+                # Draw the timer
+                self.draw_text(self.timer.get_formatted_time(), 20, self.DISPLAY_W - 100, 30)
+                
                 self.window.blit(self.display, (0,0))
                 pygame.display.update() # Update the screen to show changes
                 self.reset_keys()
+        
+        self.timer.reset()  # Reset the timer when the game loop ends
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Set up for the keybinds
