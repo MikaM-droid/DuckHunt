@@ -11,7 +11,7 @@ class Level():
     def __init__(self, game, bg_image_path):
         self.game = game
         # Construct the full path to the image in the bgs folder
-        full_path = os.path.join("Duck Hunt Reboot", "Assets", "bgs", bg_image_path)
+        full_path = os.path.join("Assets", "bgs", bg_image_path)
         self.background = pygame.image.load(full_path)  # Load the background image
         self.background = pygame.transform.scale(self.background, (game.DISPLAY_W, game.DISPLAY_H))  # Scale it
         self.completed = False
