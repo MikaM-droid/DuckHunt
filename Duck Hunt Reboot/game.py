@@ -20,9 +20,11 @@ class Game():
         self.main_menu = MainMenu(self)
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
+        self.pause_menu = PauseMenu(self)
         self.curr_menu = self.main_menu
-        self.player = Player(100, 500)
+        self.player = Player(100, 500, self.DISPLAY_W, self.DISPLAY_H)
         self.level_manager = LevelManager(self)
+        self.paused = False
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
@@ -31,21 +33,28 @@ class Game():
         self.level_manager.start_level(1)  # Start with level 1
         while self.playing:
             self.check_events() # Checking the user input so it can act accordingly (key input)
-            if self.START_KEY:
-                self.playing = False
-            self.display.fill(self.BLACK) # Clears the screen each frame
             
-            # Update and draw the current level
-            self.level_manager.update()
-            self.level_manager.draw()
-            
-            # Update and draw the player
-            self.player.move(pygame.key.get_pressed())
-            self.player.draw(self.display)
-            
-            self.window.blit(self.display, (0,0))
-            pygame.display.update() # Update the screen to show changes
-            self.reset_keys()
+            if self.BACK_KEY:  # Pause the game when backspace is pressed
+                self.paused = True
+                self.pause_menu.display_menu()
+                self.paused = False
+                self.reset_keys()
+                continue
+                
+            if not self.paused:
+                self.display.fill(self.BLACK) # Clears the screen each frame
+                
+                # Update and draw the current level
+                self.level_manager.update()
+                self.level_manager.draw()
+                
+                # Update and draw the player
+                self.player.move(pygame.key.get_pressed())
+                self.player.draw(self.display)
+                
+                self.window.blit(self.display, (0,0))
+                pygame.display.update() # Update the screen to show changes
+                self.reset_keys()
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Set up for the keybinds
