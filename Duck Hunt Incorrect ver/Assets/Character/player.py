@@ -2,7 +2,7 @@ import pygame
 
 class Player():
     def __init__(self, x, y, screen_width, screen_height):
-        self.image = pygame.image.load("Duck Hunt Reboot/Assets/Character/cat.png")
+        self.image = pygame.image.load("Duck Hunt Incorrect ver/Assets/Character/cat.png")
         self.image = pygame.transform.scale(self.image, (100, 100)) 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
