@@ -1,6 +1,7 @@
 import pygame
 from menu import *
 from Assets.Character.player import Player
+from Assets.Levels.levels import LevelManager
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -21,17 +22,27 @@ class Game():
         self.credits = CreditsMenu(self)
         self.curr_menu = self.main_menu
         self.player = Player(100, 500)
+        self.level_manager = LevelManager(self)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
 
     def game_loop(self):
+        self.level_manager.start_level(1)  # Start with level 1
         while self.playing:
             self.check_events() # Checking the user input so it can act accordingly (key input)
             if self.START_KEY:
-                 self.playing= False
+                self.playing = False
             self.display.fill(self.BLACK) # Clears the screen each frame
-            self.draw_text('Thanks for playing', 20, self.DISPLAY_W/2, self.DISPLAY_H/2)
+            
+            # Update and draw the current level
+            self.level_manager.update()
+            self.level_manager.draw()
+            
+            # Update and draw the player
+            self.player.move(pygame.key.get_pressed())
+            self.player.draw(self.display)
+            
             self.window.blit(self.display, (0,0))
             pygame.display.update() # Update the screen to show changes
             self.reset_keys()
