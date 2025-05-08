@@ -147,6 +147,8 @@ class CreditsMenu(Menu):
             self.game.draw_text('Made by Mikaela Monsma', 15, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 10)
             self.blit_screen()
 
+#######################################    Pause menu    ###############################################################
+
 class PauseMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -187,6 +189,56 @@ class PauseMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Resume':
+                self.game.playing = True
+                self.run_display = False
+            elif self.state == 'Main Menu':
+                self.game.playing = False
+                self.game.curr_menu = self.game.main_menu
+                self.run_display = False
+
+#######################################    Game over menu    ###############################################################
+
+class GameOverMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = 'Play Again'
+        self.playagainx, self.playagainy = self.mid_w, self.mid_h + 30
+        self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
+        self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text('Game Over', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text("Play Again", 20, self.playagainx, self.playagainy)
+            self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
+            self.draw_cursor()
+            self.blit_screen()
+
+    def move_cursor(self):
+        if self.game.DOWN_KEY:
+            if self.state == 'Play Again':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+                self.state = 'Play Again'
+        elif self.game.UP_KEY:
+            if self.state == 'Play Again':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+                self.state = 'Play Again'
+        
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            if self.state == 'Play Again':
+                self.game.timer.start(300)  # Restart the timer from 5 minutes
                 self.game.playing = True
                 self.run_display = False
             elif self.state == 'Main Menu':

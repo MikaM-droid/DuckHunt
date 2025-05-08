@@ -22,6 +22,7 @@ class Game():
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
+        self.game_over_menu = GameOverMenu(self)
         self.curr_menu = self.main_menu
         self.player = Player(100, 500, self.DISPLAY_W, self.DISPLAY_H)
         self.level_manager = LevelManager(self)
@@ -32,33 +33,39 @@ class Game():
 #Main game loop :)
 
     def game_loop(self):
-        self.level_manager.start_level(1)  # Start with level 1
-        self.timer.start()  # Start the timer when the game starts
+        self.level_manager.start_level(1)           # Start with level 1
+        self.timer.start()                          # Start the timer when the game starts
+        self.game_over_triggered = False            # Flag to check if game over has been triggered
+
         while self.playing:
-            self.check_events() # Checking the user input so it can act accordingly (key input)
+            self.check_events()                     # Checking the user input so it can act accordingly (key input)
             
-            if self.BACK_KEY:  # Pause the game when backspace is pressed
+            if self.BACK_KEY:                       # Pause the game when backspace is pressed
                 self.paused = True
-                self.timer.pause()  # Pause the timer
+                self.timer.pause()  
                 self.pause_menu.display_menu()
                 self.paused = False
-                self.timer.resume()  # Resume the timer
+                self.timer.resume()  
                 self.reset_keys()
                 continue
                 
             if not self.paused:
-                self.display.fill(self.BLACK) # Clears the screen each frame
+                self.display.fill(self.BLACK)       # Clears the screen each frame
                 
-                # Update and draw the current level
-                self.level_manager.update()
+                self.level_manager.update()         # Update and draw the current level
                 self.level_manager.draw()
                 
-                # Update and draw the player
-                self.player.move(pygame.key.get_pressed())
+                self.player.move(pygame.key.get_pressed())      # Update and draw the player
                 self.player.draw(self.display)
                 
-                # Draw the timer
-                self.draw_text(self.timer.get_formatted_time(), 20, self.DISPLAY_W - 100, 30)
+                self.draw_text(self.timer.get_formatted_time(), 20, self.DISPLAY_W - 100, 30) # Draw the timer
+
+                if self.timer.get_time_remaining() <= 0 and not self.game_over_triggered:
+                    self.game_over_triggered = True
+                    self.timer.pause()
+                    self.playing = False
+                    self.game_over_menu.display_menu()
+                    break
                 
                 self.window.blit(self.display, (0,0))
                 pygame.display.update() # Update the screen to show changes

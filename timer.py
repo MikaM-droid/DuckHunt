@@ -11,16 +11,18 @@ class GameTimer:
         self.is_paused = False 
         self.is_running = False 
         self.total_paused_time = 0 # Total time spent in paused state
+        self.countdown_time = 0 # Time to countdown from
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Start the timer
 
-    def start(self):
+    def start(self, countdown_seconds=60):
         if not self.is_running:
-            self.start_time = time.time()    #Set the start time to the current time
-            self.is_running = True           #Set to running
-            self.is_paused = False           #Set to not paused
-            self.total_paused_time = 0       #Reset the total paused time
+            self.countdown_time = countdown_seconds
+            self.start_time = time.time()                #Set the start time to the current time
+            self.is_running = True                       #Set to running
+            self.is_paused = False                       #Set to not paused
+            self.total_paused_time = 0                   #Reset the total paused time
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Pause the timer
@@ -47,22 +49,34 @@ class GameTimer:
         self.is_paused = False
         self.is_running = False
         self.total_paused_time = 0
+        self.countdown_time = 0
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Get the elapsed time in seconds
+#Get the remaining time in seconds
 
-    def get_elapsed_time(self):
+    def get_time_remaining(self):
         if not self.is_running:
-            return 0
+            return self.countdown_time
         if self.is_paused:
-            return self.paused_time - self.start_time - self.total_paused_time #Get the elapsed time while paused
-        return time.time() - self.start_time - self.total_paused_time          #Get the elapsed time while running
-
+            elapsed = self.paused_time - self.start_time - self.total_paused_time
+        else:
+            elapsed = time.time() - self.start_time - self.total_paused_time
+        remaining = self.countdown_time - elapsed
+        return max(0, remaining)  # Never return negative time
+    
 #--------------------------------------------------------------------------------------------------------------------------
-#Get the elapsed time in a formatted string (MM:SS)
+#Get formatted time
 
     def get_formatted_time(self):
-        elapsed = self.get_elapsed_time()
-        minutes = int(elapsed // 60)
-        seconds = int(elapsed % 60)
-        return f"{minutes:02d}:{seconds:02d}" 
+        remaining = self.get_time_remaining()
+        minutes = int(remaining // 60)
+        seconds = int(remaining % 60)
+        return f"{minutes:02d}:{seconds:02d}"
+
+
+
+
+
+
+
+            

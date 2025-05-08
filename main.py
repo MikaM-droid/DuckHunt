@@ -1,7 +1,7 @@
 
 '''
 Author: Mikaela Monsma
-Date: 10/12/2023
+Date: 15/03/2025
 Description: My own game made with duckhunt as an inspiration.
 '''
 
