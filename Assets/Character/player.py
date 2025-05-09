@@ -6,6 +6,7 @@ class Player():
         self.image = pygame.transform.scale(self.image, (100, 100)) 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+        self.score = 0  # Player's score
         
         self.screen_width = screen_width
         self.screen_height = screen_height

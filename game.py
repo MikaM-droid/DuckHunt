@@ -3,6 +3,7 @@ from menu import *
 from Assets.Character.player import Player
 from Assets.Levels.levels import LevelManager
 from timer import GameTimer
+from useri import UI
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -28,6 +29,7 @@ class Game():
         self.level_manager = LevelManager(self)
         self.paused = False
         self.timer = GameTimer()  # Initialize the timer
+        self.ui = UI(self.DISPLAY_W, self.DISPLAY_H)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)

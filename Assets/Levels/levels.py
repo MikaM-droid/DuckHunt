@@ -61,18 +61,3 @@ class LevelManager:
             self.current_level.draw()
 
 
-
-
-
-#class Level1(Level):
-
-
-
-#class Level2(Level):
-
-
-
-#class Level3(Level):
-
-
-
