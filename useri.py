@@ -1,5 +1,10 @@
 import pygame
 
+#TODOLIST 
+# Properly update this code to match the new game structure and add the timer and score to the UI bar.
+
+#---------------------------------------------------------------------------------------------------------------------------
+
 class UI:
     def __init__(self, screen_width, screen_height, font_path=None):
         self.screen_width = screen_width
@@ -23,10 +28,14 @@ class UI:
         self.bar_x = (self.screen_width - self.bar_width) // 2
         self.bar_y = self.screen_height - self.ui_height + 50
 
+#---------------------------------------------------------------------------------------------------------------------------
+
     def update(self, timer, score, needed_score):
         self.timer = timer
         self.score = score
         self.needed_score = needed_score
+
+#---------------------------------------------------------------------------------------------------------------------------
 
     def draw(self, screen):
         # Draw UI background
