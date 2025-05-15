@@ -20,13 +20,13 @@ class UI:
         # Timer and score tracking
         self.timer = "0:00"
         self.score = 0
-        self.needed_score = 4
+        self.needed_score = 60  # Total score needed to complete the level
 
         # Progress bar settings
-        self.bar_width = self.screen_width // 2
+        self.bar_width = 300  # Width of the progress bar
         self.bar_height = 30
-        self.bar_x = (self.screen_width - self.bar_width) // 2
-        self.bar_y = self.screen_height - self.ui_height + 50
+        self.bar_x = self.screen_width - self.bar_width - 20  # Position on the right side
+        self.bar_y = self.screen_height - self.ui_height + 35
 
 #---------------------------------------------------------------------------------------------------------------------------
 
@@ -42,9 +42,13 @@ class UI:
         ui_rect = pygame.Rect(0, self.screen_height - self.ui_height, self.screen_width, self.ui_height)
         pygame.draw.rect(screen, (30, 30, 30), ui_rect)  # Dark background
 
-        # Draw timer
-        timer_text = self.font.render(f"Timer: {self.timer}", True, (255, 255, 255))
-        screen.blit(timer_text, (20, self.screen_height - self.ui_height + 20))
+        # Draw timer on the left
+        timer_text = self.font.render(f"Time: {self.timer}", True, (255, 255, 255))
+        screen.blit(timer_text, (20, self.screen_height - self.ui_height + 35))
+
+        # Draw score text
+        score_text = self.font.render(f"Score: {self.score}/{self.needed_score}", True, (255, 255, 255))
+        screen.blit(score_text, (self.bar_x - 150, self.screen_height - self.ui_height + 35))
 
         # Draw progress bar background
         pygame.draw.rect(screen, (80, 80, 80), (self.bar_x, self.bar_y, self.bar_width, self.bar_height), border_radius=10)

@@ -4,6 +4,7 @@ from Assets.Character.player import Player
 from Assets.Levels.levels import LevelManager
 from timer import GameTimer
 from useri import UI
+from Assets.Animals.animal_manager import AnimalManager
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -25,11 +26,12 @@ class Game():
         self.pause_menu = PauseMenu(self)
         self.game_over_menu = GameOverMenu(self)
         self.curr_menu = self.main_menu
-        self.player = Player(100, 500, self.DISPLAY_W, self.DISPLAY_H)
+        self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H)
         self.level_manager = LevelManager(self)
         self.paused = False
         self.timer = GameTimer()  # Initialize the timer
         self.ui = UI(self.DISPLAY_W, self.DISPLAY_H)
+        self.animal_manager = AnimalManager(self.DISPLAY_W, self.DISPLAY_H)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
@@ -60,7 +62,17 @@ class Game():
                 self.player.move(pygame.key.get_pressed())      # Update and draw the player
                 self.player.draw(self.display)
                 
-                self.draw_text(self.timer.get_formatted_time(), 20, self.DISPLAY_W - 100, 30) # Draw the timer
+                # Update and draw animals
+                self.animal_manager.update()
+                self.animal_manager.draw(self.display)
+                
+                # Check for collisions and update score
+                points = self.animal_manager.check_collisions(self.player.rect)
+                self.player.score += points
+                
+                # Update and draw UI
+                self.ui.update(self.timer.get_formatted_time(), self.player.score, 100)
+                self.ui.draw(self.display)
 
                 if self.timer.get_time_remaining() <= 0 and not self.game_over_triggered:
                     self.game_over_triggered = True

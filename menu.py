@@ -7,6 +7,9 @@ class Menu():
         self.run_display = True
         self.cursor_rect = pygame.Rect(0, 0, 20, 20)
         self.offset = -100
+        # Load and scale the background image
+        self.bg_image = pygame.image.load("Assets/bgs/mainimg.jpg")
+        self.bg_image = pygame.transform.scale(self.bg_image, (self.game.DISPLAY_W, self.game.DISPLAY_H))
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -40,7 +43,8 @@ class MainMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            # Draw the background image instead of filling with black
+            self.game.display.blit(self.bg_image, (0, 0))
             self.game.draw_text('Main Menu', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text("Start Game", 20, self.startx, self.starty)
             self.game.draw_text("Options", 20, self.optionsx, self.optionsy)
@@ -93,6 +97,9 @@ class MainMenu(Menu):
                 self.game.curr_menu = self.game.options
             elif self.state == 'Credits':
                 self.game.curr_menu = self.game.credits
+            elif self.state == 'Quit':
+                pygame.quit()
+                exit()
             self.run_display = False
 
 #######################################    Options menu    #################################################################
@@ -201,6 +208,7 @@ class PauseMenu(Menu):
                 self.run_display = False
             elif self.state == 'Main Menu':
                 self.game.playing = False
+                self.game.player.score = 0  # Reset the score
                 self.game.curr_menu = self.game.main_menu
                 self.run_display = False
 
@@ -241,15 +249,20 @@ class GameOverMenu(Menu):
             elif self.state == 'Main Menu':
                 self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
                 self.state = 'Play Again'
-        
+
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Play Again':
-                self.game.timer.start(300)  # Restart the timer from 5 minutes
+                # Reset game state
+                self.game.player.score = 0
+                self.game.timer.reset()
+                self.game.animal_manager.animals.clear()
+                self.game.game_over_triggered = False
                 self.game.playing = True
                 self.run_display = False
             elif self.state == 'Main Menu':
                 self.game.playing = False
+                self.game.player.score = 0  # Reset the score
                 self.game.curr_menu = self.game.main_menu
                 self.run_display = False

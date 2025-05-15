@@ -6,15 +6,19 @@ class Player():
         self.image = pygame.transform.scale(self.image, (100, 100)) 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.score = 0  # Player's score
+        self.score = 0                                                 # Player's score
         
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.speed = 3  #Horizontal movement speed
-        self.jump_power = -12  #Jump velocity
-        self.gravity = 0.5  #Gravity strength
-        self.velocity_y = 0  #Vertical movement speed
-        self.on_ground = True  #Check if the player is on the ground
+        self.speed = 3                                                 #Horizontal movement speed
+        self.jump_power = -15                                          #Jump velocity
+        self.gravity = 0.8                                            #Gravity strength
+        self.velocity_y = 0                                           #Vertical movement speed
+        self.on_ground = False                                        #Start in the air
+        self.float_height = self.screen_height - 120                   # Position above UI bar
+        self.can_jump = True                                          # Flag to control jumping
+        self.max_jump_height = 200                                    # Maximum jump height
+        self.initial_jump_y = 0                                       # Starting Y position of jump
 
     def move(self, keys):
         # Store the previous position
@@ -28,13 +32,25 @@ class Player():
             self.rect.x += self.speed
 
         # Handle jumping
-        if keys[pygame.K_w] and self.on_ground:
+        if keys[pygame.K_w] and self.can_jump:
             self.velocity_y = self.jump_power
-            self.on_ground = False  # Player is in the air
+            self.can_jump = False
+            self.initial_jump_y = self.rect.y
 
         # Apply gravity
         self.velocity_y += self.gravity
         self.rect.y += self.velocity_y
+
+        # Check if we've reached max jump height
+        if not self.can_jump and self.rect.y <= self.initial_jump_y - self.max_jump_height:
+            self.velocity_y = 0
+            self.rect.y = self.initial_jump_y - self.max_jump_height
+
+        # Keep character floating at desired height
+        if self.rect.bottom > self.float_height:
+            self.rect.bottom = self.float_height
+            self.velocity_y = 0
+            self.can_jump = True  # Reset jump ability when touching the ground
 
         # Boundary checks
         # Left boundary
@@ -47,11 +63,6 @@ class Player():
         if self.rect.top < 0:
             self.rect.top = 0
             self.velocity_y = 0
-        # Bottom boundary (ground)
-        if self.rect.bottom > self.screen_height:
-            self.rect.bottom = self.screen_height
-            self.velocity_y = 0
-            self.on_ground = True
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
