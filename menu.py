@@ -1,4 +1,6 @@
 import pygame
+from Assets.Character.player import Player
+from Assets.Animals.animal_manager import AnimalManager
 
 class Menu():
     def __init__(self, game):
@@ -255,14 +257,122 @@ class GameOverMenu(Menu):
         if self.game.START_KEY:
             if self.state == 'Play Again':
                 # Reset game state
-                self.game.player.score = 0
+                self.game.level_manager.start_level(1)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.timer.reset()
-                self.game.animal_manager.animals.clear()
+                self.game.timer.start(45)
                 self.game.game_over_triggered = False
+                self.game.playing = True
+                self.run_display = False
+                return  # Add return to prevent further execution
+            elif self.state == 'Main Menu':
+                self.game.playing = False
+                self.game.curr_menu = self.game.main_menu
+                self.run_display = False
+
+#######################################    Level Transition Menu    ###############################################################
+
+class LevelTransitionMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = 'Next Level'
+        self.nextlevelx, self.nextlevely = self.mid_w, self.mid_h + 30
+        self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
+        self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text(f'Level {self.game.level_manager.current_level_number} Complete!', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text("Next Level", 20, self.nextlevelx, self.nextlevely)
+            self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
+            self.draw_cursor()
+            self.blit_screen()
+
+    def move_cursor(self):
+        if self.game.DOWN_KEY:
+            if self.state == 'Next Level':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
+                self.state = 'Next Level'
+        elif self.game.UP_KEY:
+            if self.state == 'Next Level':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
+                self.state = 'Next Level'
+
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            if self.state == 'Next Level':
                 self.game.playing = True
                 self.run_display = False
             elif self.state == 'Main Menu':
                 self.game.playing = False
-                self.game.player.score = 0  # Reset the score
+                self.game.curr_menu = self.game.main_menu
+                self.run_display = False
+
+#######################################    Victory Menu    ###############################################################
+
+class VictoryMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = 'Play Again'
+        self.playagainx, self.playagainy = self.mid_w, self.mid_h + 30
+        self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
+        self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text('Victory!', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text("Play Again", 20, self.playagainx, self.playagainy)
+            self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
+            self.draw_cursor()
+            self.blit_screen()
+
+    def move_cursor(self):
+        if self.game.DOWN_KEY:
+            if self.state == 'Play Again':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+                self.state = 'Play Again'
+        elif self.game.UP_KEY:
+            if self.state == 'Play Again':
+                self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
+                self.state = 'Main Menu'
+            elif self.state == 'Main Menu':
+                self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
+                self.state = 'Play Again'
+
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            if self.state == 'Play Again':
+                # Reset game state
+                self.game.level_manager.start_level(1)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.timer.reset()
+                self.game.timer.start(45)
+                self.game.game_over_triggered = False
+                self.game.playing = True
+                self.run_display = False
+                return
+            elif self.state == 'Main Menu':
+                self.game.playing = False
                 self.game.curr_menu = self.game.main_menu
                 self.run_display = False

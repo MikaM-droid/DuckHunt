@@ -1,5 +1,7 @@
 import pygame
 import os
+from Assets.Character.player import Player
+from Assets.Animals.animal_manager import AnimalManager
 
 class Level():
     def __init__(self, game, bg_image_path):

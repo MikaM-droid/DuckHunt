@@ -10,21 +10,16 @@ class Player():
         
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.speed = 3                                                 #Horizontal movement speed
-        self.jump_power = -15                                          #Jump velocity
+        self.speed = 5                                                 #Horizontal movement speed
+        self.jump_power = -20                                          #Jump velocity
         self.gravity = 0.8                                            #Gravity strength
         self.velocity_y = 0                                           #Vertical movement speed
-        self.on_ground = False                                        #Start in the air
         self.float_height = self.screen_height - 120                   # Position above UI bar
         self.can_jump = True                                          # Flag to control jumping
         self.max_jump_height = 200                                    # Maximum jump height
         self.initial_jump_y = 0                                       # Starting Y position of jump
 
     def move(self, keys):
-        # Store the previous position
-        prev_x = self.rect.x
-        prev_y = self.rect.y
-
         # Handle horizontal movement
         if keys[pygame.K_a]:
             self.rect.x -= self.speed

@@ -25,6 +25,8 @@ class Game():
         self.credits = CreditsMenu(self)
         self.pause_menu = PauseMenu(self)
         self.game_over_menu = GameOverMenu(self)
+        self.level_transition_menu = LevelTransitionMenu(self)
+        self.victory_menu = VictoryMenu(self)
         self.curr_menu = self.main_menu
         self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H)
         self.level_manager = LevelManager(self)
@@ -38,10 +40,13 @@ class Game():
 
     def game_loop(self):
         self.level_manager.start_level(1)           # Start with level 1
-        self.timer.start()                          # Start the timer when the game starts
+        self.timer.start(45)                        # Start with 45 seconds instead of 60
         self.game_over_triggered = False            # Flag to check if game over has been triggered
+        clock = pygame.time.Clock()                 # Create a clock object for frame rate control
+        FPS = 60                                   # Set the desired frame rate
 
         while self.playing:
+            clock.tick(FPS)                         # Control the frame rate
             self.check_events()                     # Checking the user input so it can act accordingly (key input)
             
             if self.BACK_KEY:                       # Pause the game when backspace is pressed
@@ -70,16 +75,49 @@ class Game():
                 points = self.animal_manager.check_collisions(self.player.rect)
                 self.player.score += points
                 
+                # Get required score based on level
+                required_score = 150 if self.level_manager.current_level_number < 3 else 200
+                
+                # Check for level progression
+                if self.player.score >= required_score:
+                    if self.level_manager.current_level_number == 3:
+                        # Show victory screen
+                        self.timer.pause()
+                        self.victory_menu.display_menu()
+                        if not self.playing:  # If playing is False, break the loop
+                            break
+                        continue
+                    else:
+                        # Show level transition screen
+                        self.timer.pause()
+                        self.level_transition_menu.display_menu()
+                        if not self.playing:  # If playing is False, break the loop
+                            break
+                        # Reset game state before advancing to next level
+                        self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H)
+                        self.animal_manager = AnimalManager(self.DISPLAY_W, self.DISPLAY_H)
+                        self.level_manager.next_level()
+                        self.timer.reset()
+                        # Set time based on level
+                        if self.level_manager.current_level_number == 3:
+                            self.timer.start(30)  # 30 seconds for level 3
+                        else:
+                            self.timer.start(40)  # 40 seconds for other levels
+                        self.game_over_triggered = False
+                        self.paused = False  # Ensure game is not paused after level transition
+                        continue
+                
                 # Update and draw UI
-                self.ui.update(self.timer.get_formatted_time(), self.player.score, 100)
+                self.ui.update(self.timer.get_formatted_time(), self.player.score, required_score)
                 self.ui.draw(self.display)
 
                 if self.timer.get_time_remaining() <= 0 and not self.game_over_triggered:
                     self.game_over_triggered = True
                     self.timer.pause()
-                    self.playing = False
                     self.game_over_menu.display_menu()
-                    break
+                    if not self.playing:  # If playing is False, break the loop
+                        break
+                    continue  # Otherwise continue the game loop
                 
                 self.window.blit(self.display, (0,0))
                 pygame.display.update() # Update the screen to show changes

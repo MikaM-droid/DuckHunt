@@ -1,8 +1,5 @@
 import pygame
 
-#TODOLIST 
-# Properly update this code to match the new game structure and add the timer and score to the UI bar.
-
 #---------------------------------------------------------------------------------------------------------------------------
 
 class UI:
@@ -46,9 +43,9 @@ class UI:
         timer_text = self.font.render(f"Time: {self.timer}", True, (255, 255, 255))
         screen.blit(timer_text, (20, self.screen_height - self.ui_height + 35))
 
-        # Draw score text
+        # Draw score text with more space before the progress bar
         score_text = self.font.render(f"Score: {self.score}/{self.needed_score}", True, (255, 255, 255))
-        screen.blit(score_text, (self.bar_x - 150, self.screen_height - self.ui_height + 35))
+        screen.blit(score_text, (self.bar_x - 200, self.screen_height - self.ui_height + 35))
 
         # Draw progress bar background
         pygame.draw.rect(screen, (80, 80, 80), (self.bar_x, self.bar_y, self.bar_width, self.bar_height), border_radius=10)

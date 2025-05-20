@@ -11,13 +11,22 @@ class Animal:
         self.direction = 1  # 1 for right, -1 for left
         self.is_caught = False
 
-    def move(self, screen_width):
+    def move(self, screen_width, max_height):
         if not self.is_caught:
+            # Update horizontal position
             self.x += self.speed * self.direction
-            # Reverse direction if hitting screen edges
-            if self.x <= 0 or self.x + self.rect.width >= screen_width:
-                self.direction *= -1
-                self.x = max(0, min(self.x, screen_width - self.rect.width))
+            
+            # Keep within screen bounds
+            if self.x <= 0:
+                self.x = 0
+                self.direction = 1
+            elif self.x + self.rect.width >= screen_width:
+                self.x = screen_width - self.rect.width
+                self.direction = -1
+            
+            # Update rect position
+            self.rect.x = self.x
+            self.rect.y = self.y
 
     def draw(self, screen):
         if not self.is_caught:
