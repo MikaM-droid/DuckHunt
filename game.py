@@ -1,5 +1,5 @@
 import pygame
-from menu import *
+from menu import MainMenu, OptionsMenu, CreditsMenu, PauseMenu, GameOverMenu, LevelTransitionMenu, VictoryMenu
 from Assets.Character.player import Player
 from Assets.Levels.levels import LevelManager
 from timer import GameTimer
