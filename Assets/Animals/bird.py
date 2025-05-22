@@ -3,6 +3,8 @@ from .animal import Animal
 import os
 import random
 
+######################################### Bird #########################################################
+
 class Bird(Animal):
     def __init__(self, x, y):
         super().__init__(x, y, speed=7, points=10)
@@ -21,10 +23,14 @@ class Bird(Animal):
         self.initial_vertical_speed = 4
         self.direction_change_chance = 0.03
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def reset_speeds(self):
         self.speed = self.initial_speed
         self.vertical_speed = self.initial_vertical_speed
         self.vertical_direction = random.choice([-1, 1])
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def move(self, screen_width, max_height):
         super().move(screen_width, max_height)

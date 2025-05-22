@@ -2,6 +2,9 @@ import pygame
 from .animal import Animal
 import os
 
+######################################### Mouse #########################################################
+#This file contains the Mouse class, which is a child of the Animal class.
+
 class Mouse(Animal):
     def __init__(self, x, y):
         super().__init__(x, y, speed=3, points=5)
