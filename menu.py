@@ -14,11 +14,13 @@ class Menu():
         self.bg_image = pygame.transform.scale(self.bg_image, (self.game.DISPLAY_W, self.game.DISPLAY_H))
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Draws the cursor
 
     def draw_cursor(self):
         self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Blits the screen (Blits is a function that blits the screen to the window)
 
     def blit_screen(self):
         self.game.window.blit(self.game.display, (0, 0))
@@ -115,6 +117,7 @@ class OptionsMenu(Menu):
         self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Draws the options menu
 
     def display_menu(self):
         self.run_display = True
@@ -129,6 +132,7 @@ class OptionsMenu(Menu):
             self.blit_screen()
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Checks the input for the options menu
 
     def check_input(self):
         if self.game.BACK_KEY:
@@ -152,6 +156,9 @@ class CreditsMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the credits menu
+
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -174,6 +181,9 @@ class PauseMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.resumex + self.offset, self.resumey)
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the pause menu
+
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -185,6 +195,9 @@ class PauseMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Scrolling through the pause menu with the up and down keys
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -201,6 +214,9 @@ class PauseMenu(Menu):
             elif self.state == 'Main Menu':
                 self.cursor_rect.midtop = (self.resumex + self.offset, self.resumey)
                 self.state = 'Resume'
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Checks the input for the pause menu
 
     def check_input(self):
         self.move_cursor()
@@ -224,6 +240,9 @@ class GameOverMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the game over menu
+
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -235,6 +254,9 @@ class GameOverMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Scrolling through the game over menu with the up and down keys
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -251,6 +273,9 @@ class GameOverMenu(Menu):
             elif self.state == 'Main Menu':
                 self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
                 self.state = 'Play Again'
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Checks the input for the game over menu
 
     def check_input(self):
         self.move_cursor()
@@ -281,6 +306,9 @@ class LevelTransitionMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the level transition menu
+
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -292,6 +320,9 @@ class LevelTransitionMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Scrolling through the level transition menu with the up and down keys
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -309,10 +340,25 @@ class LevelTransitionMenu(Menu):
                 self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
                 self.state = 'Next Level'
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Checks the input for the level transition menu
+
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Next Level':
+                # Reset game state before advancing to next level
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.level_manager.next_level()
+                self.game.timer.reset()
+                # Set time based on level
+                if self.game.level_manager.current_level_number == 3:
+                    self.game.timer.start(30)  # 30 seconds for level 3
+                else:
+                    self.game.timer.start(40)  # 40 seconds for other levels
+                self.game.game_over_triggered = False
+                self.game.paused = False  # Ensure game is not paused after level transition
                 self.game.playing = True
                 self.run_display = False
             elif self.state == 'Main Menu':
@@ -330,6 +376,9 @@ class VictoryMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the victory menu
+
     def display_menu(self):
         self.run_display = True
         while self.run_display:
@@ -341,6 +390,9 @@ class VictoryMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Scrolling through the victory menu with the up and down keys
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -358,11 +410,15 @@ class VictoryMenu(Menu):
                 self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
                 self.state = 'Play Again'
 
+#--------------------------------------------------------------------------------------------------------------------------
+#Checks the input for the victory menu
+
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Play Again':
                 # Reset game state
+                self.game.level_manager.current_level_number = 1  # Explicitly set level to 1
                 self.game.level_manager.start_level(1)
                 self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)

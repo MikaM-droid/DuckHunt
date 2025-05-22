@@ -93,18 +93,6 @@ class Game():
                         self.level_transition_menu.display_menu()
                         if not self.playing:  # If playing is False, break the loop
                             break
-                        # Reset game state before advancing to next level
-                        self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H)
-                        self.animal_manager = AnimalManager(self.DISPLAY_W, self.DISPLAY_H)
-                        self.level_manager.next_level()
-                        self.timer.reset()
-                        # Set time based on level
-                        if self.level_manager.current_level_number == 3:
-                            self.timer.start(30)  # 30 seconds for level 3
-                        else:
-                            self.timer.start(40)  # 40 seconds for other levels
-                        self.game_over_triggered = False
-                        self.paused = False  # Ensure game is not paused after level transition
                         continue
                 
                 # Update and draw UI

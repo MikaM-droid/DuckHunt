@@ -17,31 +17,31 @@ class Animal:
         self.is_caught = False
 
 #--------------------------------------------------------------------------------------------------------------------------
+## Reset speeds to initial values
 
     def move(self, screen_width, max_height):
         if not self.is_caught:
             # Update horizontal position
             self.x += self.speed * self.direction
             
-            # Keep within screen bounds
-            if self.x <= 0:
-                self.x = 0
-                self.direction = 1
-            elif self.x + self.rect.width >= screen_width:
-                self.x = screen_width - self.rect.width
-                self.direction = -1
+            # Make animal disappear when it goes off screen
+            if self.x + self.rect.width < 0 or self.x > screen_width:
+                self.is_caught = True
+                return
             
             # Update rect position
             self.rect.x = self.x
             self.rect.y = self.y
 
 #--------------------------------------------------------------------------------------------------------------------------
+# Draw the animal on the screen
 
     def draw(self, screen):
         if not self.is_caught:
             screen.blit(self.image, self.rect)
 
 #--------------------------------------------------------------------------------------------------------------------------
+# Check for collision with the player
 
     def check_collision(self, player_rect):
         if not self.is_caught and self.rect.colliderect(player_rect):

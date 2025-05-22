@@ -1,5 +1,10 @@
 import pygame
 
+######################################### Player #########################################################
+#This file contains the Player class, which is the main character of the game.
+#It contains the move method, which moves the player across the screen.
+#It also contains the draw method, which draws the player on the screen.
+
 class Player():
     def __init__(self, x, y, screen_width, screen_height):
         self.image = pygame.image.load("Assets/Character/cat.png")
@@ -18,6 +23,8 @@ class Player():
         self.can_jump = True                                          # Flag to control jumping
         self.max_jump_height = 200                                    # Maximum jump height
         self.initial_jump_y = 0                                       # Starting Y position of jump
+        
+#--------------------------------------------------------------------------------------------------------------------------
 
     def move(self, keys):
         # Handle horizontal movement
@@ -47,7 +54,7 @@ class Player():
             self.velocity_y = 0
             self.can_jump = True  # Reset jump ability when touching the ground
 
-        # Boundary checks
+        # Boundary checks------------- Makes sure the player doesn't go out of bounds
         # Left boundary
         if self.rect.left < 0:
             self.rect.left = 0
@@ -58,6 +65,9 @@ class Player():
         if self.rect.top < 0:
             self.rect.top = 0
             self.velocity_y = 0
+
+#--------------------------------------------------------------------------------------------------------------------------
+#Draws the player on the screen
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

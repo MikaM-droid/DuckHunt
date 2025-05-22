@@ -1,6 +1,6 @@
 import pygame
 
-#---------------------------------------------------------------------------------------------------------------------------
+############################################## Game UI ###################################################
 
 class UI:
     def __init__(self, screen_width, screen_height, font_path=None):
@@ -26,6 +26,7 @@ class UI:
         self.bar_y = self.screen_height - self.ui_height + 35
 
 #---------------------------------------------------------------------------------------------------------------------------
+# Update the UI with new values
 
     def update(self, timer, score, needed_score):
         self.timer = timer
@@ -33,6 +34,7 @@ class UI:
         self.needed_score = needed_score
 
 #---------------------------------------------------------------------------------------------------------------------------
+# Draw the UI elements on the screen
 
     def draw(self, screen):
         # Draw UI background
@@ -43,11 +45,11 @@ class UI:
         timer_text = self.font.render(f"Time: {self.timer}", True, (255, 255, 255))
         screen.blit(timer_text, (20, self.screen_height - self.ui_height + 35))
 
-        # Draw score text with more space before the progress bar
+        # Draw score text with space before the progress bar to avoid overlap
         score_text = self.font.render(f"Score: {self.score}/{self.needed_score}", True, (255, 255, 255))
         screen.blit(score_text, (self.bar_x - 200, self.screen_height - self.ui_height + 35))
 
-        # Draw progress bar background
+        # Draw progress bar background 
         pygame.draw.rect(screen, (80, 80, 80), (self.bar_x, self.bar_y, self.bar_width, self.bar_height), border_radius=10)
 
         # Calculate filled width
