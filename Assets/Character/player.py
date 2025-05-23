@@ -7,15 +7,52 @@ import pygame
 
 class Player():
     def __init__(self, x, y, screen_width, screen_height):
-        self.image = pygame.image.load("Assets/Character/cat.png")
-        self.image = pygame.transform.scale(self.image, (100, 100)) 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.score = 0                                                 # Player's score
-        
+        self.x = x
+        self.y = y
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.speed = 5                                                 #Horizontal movement speed
+        self.width = 60
+        self.height = 60
+        self.speed = 5
+        self.score = 0
+        
+        # Load and process the sprite sheet
+        try:
+            self.sprite_sheet = pygame.image.load("Assets/Character/Images/kitty_1.png").convert_alpha()
+            self.frame_width = 32  # Each frame is 32x32
+            self.frame_height = 32
+            self.frames_left = []  # Top row - running left
+            self.frames_right = []  # Bottom row - running right
+            
+            # Extract frames for running left (top row)
+            for i in range(4):  # Assuming 4 frames per row
+                frame = pygame.Surface((self.frame_width, self.frame_height), pygame.SRCALPHA)
+                frame.blit(self.sprite_sheet, (0, 0), (i * self.frame_width, 0, self.frame_width, self.frame_height))
+                frame = pygame.transform.scale(frame, (self.width, self.height))
+                self.frames_left.append(frame)
+            
+            # Extract frames for running right (bottom row)
+            for i in range(4):
+                frame = pygame.Surface((self.frame_width, self.frame_height), pygame.SRCALPHA)
+                frame.blit(self.sprite_sheet, (0, 0), (i * self.frame_width, self.frame_height, self.frame_width, self.frame_height))
+                frame = pygame.transform.scale(frame, (self.width, self.height))
+                self.frames_right.append(frame)
+            
+            self.current_frame = 0
+            self.animation_timer = 0
+            self.animation_delay = 100  # milliseconds between frame changes
+            self.facing_right = True
+            self.image = self.frames_right[0]
+        except (pygame.error, FileNotFoundError):
+            self.image = pygame.Surface((self.width, self.height))
+            self.image.fill((255, 0, 0))
+            self.frames_left = [self.image]
+            self.frames_right = [self.image]
+            self.current_frame = 0
+        
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        
         self.jump_power = -20                                          #Jump velocity
         self.gravity = 0.8                                            #Gravity strength
         self.velocity_y = 0                                           #Vertical movement speed
@@ -23,15 +60,31 @@ class Player():
         self.can_jump = True                                          # Flag to control jumping
         self.max_jump_height = 200                                    # Maximum jump height
         self.initial_jump_y = 0                                       # Starting Y position of jump
-        
+
 #--------------------------------------------------------------------------------------------------------------------------
 
     def move(self, keys):
-        # Handle horizontal movement
         if keys[pygame.K_a]:
-            self.rect.x -= self.speed
+            self.x -= self.speed
+            self.facing_right = False
         if keys[pygame.K_d]:
-            self.rect.x += self.speed
+            self.x += self.speed
+            self.facing_right = True
+            
+        # Keep player within screen bounds
+        if self.x < 0:
+            self.x = 0
+        elif self.x > self.screen_width - self.width:
+            self.x = self.screen_width - self.width
+            
+        self.rect.x = self.x
+        
+        # Update animation
+        current_time = pygame.time.get_ticks()
+        if current_time - self.animation_timer > self.animation_delay:
+            self.animation_timer = current_time
+            self.current_frame = (self.current_frame + 1) % len(self.frames_right)
+            self.image = self.frames_right[self.current_frame] if self.facing_right else self.frames_left[self.current_frame]
 
         # Handle jumping
         if keys[pygame.K_w] and self.can_jump:
