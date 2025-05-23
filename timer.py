@@ -1,7 +1,7 @@
 import pygame
 import time
 
-#--------------------------------------------------------------------------------------------------------------------------
+################################################ Class Timer ##############################################################
 # Timer class to keep track of the time in the game
 
 class GameTimer:
@@ -25,7 +25,7 @@ class GameTimer:
             self.total_paused_time = 0                   #Reset the total paused time
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Pause the timer
+#Pause the timer, sets the paused time to the current time
 
     def pause(self):
         if self.is_running and not self.is_paused:
@@ -33,7 +33,7 @@ class GameTimer:
             self.is_paused = True
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Resume the timer
+#Resume the timer, sets the paused time to 0 and adds the time spent in paused state to the total paused time
 
     def resume(self):
         if self.is_running and self.is_paused: #Only resume if the timer is running and paused
@@ -41,7 +41,7 @@ class GameTimer:
             self.is_paused = False
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Reset the timer
+#Reset the timer, sets all values to 0 and stops the timer
 
     def reset(self):
         self.start_time = 0
@@ -52,7 +52,7 @@ class GameTimer:
         self.countdown_time = 0
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Get the remaining time in seconds
+#Get the remaining time in seconds, returns 0 if the timer is not running or if the time is up
 
     def get_time_remaining(self):
         if not self.is_running:
@@ -65,7 +65,7 @@ class GameTimer:
         return max(0, remaining)  # Never return negative time
     
 #--------------------------------------------------------------------------------------------------------------------------
-#Get formatted time
+#Get formatted time, returns a string in MM:SS format
 
     def get_formatted_time(self):
         remaining = self.get_time_remaining()

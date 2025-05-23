@@ -352,11 +352,7 @@ class LevelTransitionMenu(Menu):
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.level_manager.next_level()
                 self.game.timer.reset()
-                # Set time based on level
-                if self.game.level_manager.current_level_number == 3:
-                    self.game.timer.start(30)  # 30 seconds for level 3
-                else:
-                    self.game.timer.start(40)  # 40 seconds for other levels
+                self.game.timer.start(45)  # Standard 45 seconds for all levels
                 self.game.game_over_triggered = False
                 self.game.paused = False  # Ensure game is not paused after level transition
                 self.game.playing = True

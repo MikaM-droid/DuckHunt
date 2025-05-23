@@ -64,12 +64,16 @@ class Player():
 #--------------------------------------------------------------------------------------------------------------------------
 
     def move(self, keys):
+        is_moving = False
+        
         if keys[pygame.K_a]:
             self.x -= self.speed
             self.facing_right = False
+            is_moving = True
         if keys[pygame.K_d]:
             self.x += self.speed
             self.facing_right = True
+            is_moving = True
             
         # Keep player within screen bounds
         if self.x < 0:
@@ -79,12 +83,17 @@ class Player():
             
         self.rect.x = self.x
         
-        # Update animation
-        current_time = pygame.time.get_ticks()
-        if current_time - self.animation_timer > self.animation_delay:
-            self.animation_timer = current_time
-            self.current_frame = (self.current_frame + 1) % len(self.frames_right)
-            self.image = self.frames_right[self.current_frame] if self.facing_right else self.frames_left[self.current_frame]
+        # Update animation only when moving
+        if is_moving:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.animation_timer > self.animation_delay:
+                self.animation_timer = current_time
+                self.current_frame = (self.current_frame + 1) % len(self.frames_right)
+                self.image = self.frames_right[self.current_frame] if self.facing_right else self.frames_left[self.current_frame]
+        else:
+            # Reset to first frame when not moving
+            self.image = self.frames_right[0] if self.facing_right else self.frames_left[0]
+            self.current_frame = 0
 
         # Handle jumping
         if keys[pygame.K_w] and self.can_jump:
