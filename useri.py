@@ -17,7 +17,7 @@ class UI:
         # Timer and score tracking
         self.timer = "0:00"
         self.score = 0
-        self.needed_score = 60  # Total score needed to complete the level
+        self.needed_score = 100  # Default score needed for level 1
 
         # Progress bar settings
         self.bar_width = 300  # Width of the progress bar

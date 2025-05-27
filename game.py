@@ -5,6 +5,7 @@ from Assets.Levels.levels import LevelManager
 from timer import GameTimer
 from useri import UI
 from Assets.Animals.animal_manager import AnimalManager
+from Assets.Audio.audio_manager import AudioManager
 
 #--------------------------------------------------------------------------------------------------------------------------
 #The main setup.
@@ -28,12 +29,14 @@ class Game():
         self.level_transition_menu = LevelTransitionMenu(self)
         self.victory_menu = VictoryMenu(self)
         self.curr_menu = self.main_menu
-        self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H)
+        self.player = Player(100, 400, self.DISPLAY_W, self.DISPLAY_H, self)
         self.level_manager = LevelManager(self)
         self.paused = False
         self.timer = GameTimer()  # Initialize the timer
         self.ui = UI(self.DISPLAY_W, self.DISPLAY_H)
         self.animal_manager = AnimalManager(self.DISPLAY_W, self.DISPLAY_H)
+        self.audio_manager = AudioManager()  # Initialize the audio manager
+        self.audio_manager.play_menu_music()  # Start playing menu music
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
@@ -76,13 +79,14 @@ class Game():
                 self.player.score += points
                 
                 # Get required score based on level
-                required_score = 150 if self.level_manager.current_level_number < 3 else 200
+                required_score = 100 if self.level_manager.current_level_number == 1 else (125 if self.level_manager.current_level_number == 2 else 150)
                 
                 # Check for level progression
                 if self.player.score >= required_score:
                     if self.level_manager.current_level_number == 3:
                         # Show victory screen
                         self.timer.pause()
+                        self.audio_manager.play_win_sound()  # Play win sound
                         self.victory_menu.display_menu()
                         if not self.playing:  # If playing is False, break the loop
                             break
@@ -90,6 +94,7 @@ class Game():
                     else:
                         # Show level transition screen
                         self.timer.pause()
+                        self.audio_manager.play_win_sound()  # Play win sound for level completion
                         self.level_transition_menu.display_menu()
                         if not self.playing:  # If playing is False, break the loop
                             break
@@ -102,6 +107,7 @@ class Game():
                 if self.timer.get_time_remaining() <= 0 and not self.game_over_triggered:
                     self.game_over_triggered = True
                     self.timer.pause()
+                    self.audio_manager.play_game_over_sound()  # Play game over sound
                     self.game_over_menu.display_menu()
                     if not self.playing:  # If playing is False, break the loop
                         break

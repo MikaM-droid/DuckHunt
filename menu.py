@@ -32,7 +32,7 @@ class Menu():
 class MainMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.state = "Start"
+        self.state = 'Start'
         self.startx, self.starty = self.mid_w, self.mid_h + 30
         self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
         self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
@@ -95,8 +95,18 @@ class MainMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Start':
+                # Reset game state
+                self.game.level_manager.current_level_number = 1
+                self.game.level_manager.start_level(1)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
+                self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.timer.reset()
+                self.game.timer.start(45)
+                self.game.game_over_triggered = False
                 self.game.playing = True
                 self.game.reset_keys()  # Added key reset after starting game
+                self.game.audio_manager.stop_menu_music()  # Stop menu music
+                self.game.audio_manager.play_game_start_sound()  # Play game start sound
             elif self.state == 'Options':
                 self.game.curr_menu = self.game.options
             elif self.state == 'Credits':
@@ -137,6 +147,7 @@ class OptionsMenu(Menu):
     def check_input(self):
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
+            self.game.audio_manager.play_menu_music()  # Start menu music
             self.run_display = False
         elif self.game.UP_KEY:  # Separate UP and DOWN checks
             if self.state == 'Controls':
@@ -165,6 +176,7 @@ class CreditsMenu(Menu):
             self.game.check_events()
             if self.game.BACK_KEY:  # Only backspace returns to main menu
                 self.game.curr_menu = self.game.main_menu
+                self.game.audio_manager.play_menu_music()  # Start menu music
                 self.run_display = False
             self.game.display.fill(self.game.BLACK)
             self.game.draw_text('Credits', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
@@ -228,6 +240,7 @@ class PauseMenu(Menu):
                 self.game.playing = False
                 self.game.player.score = 0  # Reset the score
                 self.game.curr_menu = self.game.main_menu
+                self.game.audio_manager.play_menu_music()  # Start menu music
                 self.run_display = False
 
 #######################################    Game over menu    ###############################################################
@@ -283,17 +296,19 @@ class GameOverMenu(Menu):
             if self.state == 'Play Again':
                 # Reset game state
                 self.game.level_manager.start_level(1)
-                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.timer.reset()
                 self.game.timer.start(45)
                 self.game.game_over_triggered = False
                 self.game.playing = True
+                self.game.audio_manager.reset_sound_flags()  # Reset sound flags
                 self.run_display = False
                 return  # Add return to prevent further execution
             elif self.state == 'Main Menu':
                 self.game.playing = False
                 self.game.curr_menu = self.game.main_menu
+                self.game.audio_manager.play_menu_music()  # Start menu music
                 self.run_display = False
 
 #######################################    Level Transition Menu    ###############################################################
@@ -348,7 +363,7 @@ class LevelTransitionMenu(Menu):
         if self.game.START_KEY:
             if self.state == 'Next Level':
                 # Reset game state before advancing to next level
-                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.level_manager.next_level()
                 self.game.timer.reset()
@@ -360,6 +375,7 @@ class LevelTransitionMenu(Menu):
             elif self.state == 'Main Menu':
                 self.game.playing = False
                 self.game.curr_menu = self.game.main_menu
+                self.game.audio_manager.play_menu_music()  # Start menu music
                 self.run_display = False
 
 #######################################    Victory Menu    ###############################################################
@@ -416,15 +432,17 @@ class VictoryMenu(Menu):
                 # Reset game state
                 self.game.level_manager.current_level_number = 1  # Explicitly set level to 1
                 self.game.level_manager.start_level(1)
-                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H)
+                self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.timer.reset()
                 self.game.timer.start(45)
                 self.game.game_over_triggered = False
                 self.game.playing = True
+                self.game.audio_manager.reset_sound_flags()  # Reset sound flags
                 self.run_display = False
                 return
             elif self.state == 'Main Menu':
                 self.game.playing = False
                 self.game.curr_menu = self.game.main_menu
+                self.game.audio_manager.play_menu_music()  # Start menu music
                 self.run_display = False

@@ -10,12 +10,30 @@ class Mouse(Animal):
     def __init__(self, x, y):
         super().__init__(x, y, speed=3, points=5)
         try:
-            self.image = pygame.image.load("Assets/Animals/Images/mouse.png").convert_alpha()
+            # Load and process the sprite sheet
+            self.sprite_sheet = pygame.image.load("Assets/Animals/Images/walking.png").convert_alpha()
+            self.frame_width = 16  # 16x16 pixel frames
+            self.frame_height = 16
+            self.frames = []
+            
+            # Extract frames from the sprite sheet (4 frames)
+            for i in range(4):
+                frame = pygame.Surface((self.frame_width, self.frame_height), pygame.SRCALPHA)
+                frame.blit(self.sprite_sheet, (0, 0), (i * self.frame_width, 0, self.frame_width, self.frame_height))
+                frame = pygame.transform.scale(frame, (40, 40))  # Scale up to 40x40
+                self.frames.append(frame)
+            
+            self.current_frame = 0
+            self.animation_timer = 0
+            self.animation_delay = 100  # milliseconds between frame changes
+            self.image = self.frames[0]
         except (pygame.error, FileNotFoundError):
             # Create a fallback colored rectangle if image loading fails
             self.image = pygame.Surface((40, 40))
             self.image.fill((0, 255, 0))  # Green rectangle as fallback
-        self.image = pygame.transform.scale(self.image, (40, 40))
+            self.frames = [self.image]
+            self.current_frame = 0
+        
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.y = y
@@ -55,4 +73,14 @@ class Mouse(Animal):
             
             # Update rect position
             self.rect.x = self.x
-            self.rect.y = self.y 
+            self.rect.y = self.y
+            
+            # Update animation
+            current_time = pygame.time.get_ticks()
+            if current_time - self.animation_timer > self.animation_delay:
+                self.animation_timer = current_time
+                self.current_frame = (self.current_frame + 1) % len(self.frames)
+                self.image = self.frames[self.current_frame]
+                # Flip the image based on direction
+                if self.direction < 0:
+                    self.image = pygame.transform.flip(self.image, True, False) 
