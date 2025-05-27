@@ -95,9 +95,11 @@ class MainMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Start':
-                # Reset game state
-                self.game.level_manager.current_level_number = 1
-                self.game.level_manager.start_level(1)
+                # Reset to level 1 if all levels are completed
+                if self.game.last_completed_level >= 3:
+                    self.game.last_completed_level = 0
+                # Reset game state but keep last completed level
+                self.game.level_manager.start_level(self.game.last_completed_level + 1)
                 self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.timer.reset()
@@ -105,6 +107,7 @@ class MainMenu(Menu):
                 self.game.game_over_triggered = False
                 self.game.playing = True
                 self.game.reset_keys()  # Added key reset after starting game
+                self.game.audio_manager.reset_sound_flags()  # Reset sound flags
                 self.game.audio_manager.stop_menu_music()  # Stop menu music
                 self.game.audio_manager.play_game_start_sound()  # Play game start sound
             elif self.state == 'Options':
@@ -302,7 +305,7 @@ class GameOverMenu(Menu):
                 self.game.timer.start(45)
                 self.game.game_over_triggered = False
                 self.game.playing = True
-                self.game.audio_manager.reset_sound_flags()  # Reset sound flags
+                # Don't reset sound flags here - let the audio manager handle it
                 self.run_display = False
                 return  # Add return to prevent further execution
             elif self.state == 'Main Menu':
@@ -429,16 +432,18 @@ class VictoryMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Play Again':
-                # Reset game state
-                self.game.level_manager.current_level_number = 1  # Explicitly set level to 1
-                self.game.level_manager.start_level(1)
+                # Reset to level 1 if all levels are completed
+                if self.game.last_completed_level >= 3:
+                    self.game.last_completed_level = 0
+                # Reset game state but keep last completed level
+                self.game.level_manager.start_level(self.game.last_completed_level + 1)
                 self.game.player = Player(100, 400, self.game.DISPLAY_W, self.game.DISPLAY_H, self.game)
                 self.game.animal_manager = AnimalManager(self.game.DISPLAY_W, self.game.DISPLAY_H)
                 self.game.timer.reset()
                 self.game.timer.start(45)
                 self.game.game_over_triggered = False
                 self.game.playing = True
-                self.game.audio_manager.reset_sound_flags()  # Reset sound flags
+                # Don't reset sound flags here - let the audio manager handle it
                 self.run_display = False
                 return
             elif self.state == 'Main Menu':

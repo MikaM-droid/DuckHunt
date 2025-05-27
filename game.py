@@ -37,12 +37,13 @@ class Game():
         self.animal_manager = AnimalManager(self.DISPLAY_W, self.DISPLAY_H)
         self.audio_manager = AudioManager()  # Initialize the audio manager
         self.audio_manager.play_menu_music()  # Start playing menu music
+        self.last_completed_level = 0  # Track the last completed level
 
 #--------------------------------------------------------------------------------------------------------------------------
 #Main game loop :)
 
     def game_loop(self):
-        self.level_manager.start_level(1)           # Start with level 1
+        self.level_manager.start_level(self.last_completed_level + 1)  # Start from the next level after last completed
         self.timer.start(45)                        # Start with 45 seconds instead of 60
         self.game_over_triggered = False            # Flag to check if game over has been triggered
         clock = pygame.time.Clock()                 # Create a clock object for frame rate control
@@ -63,6 +64,9 @@ class Game():
                 
             if not self.paused:
                 self.display.fill(self.BLACK)       # Clears the screen each frame
+                
+                # Reset sound flags if needed
+                self.audio_manager.reset_sound_flags()
                 
                 self.level_manager.update()         # Update and draw the current level
                 self.level_manager.draw()
@@ -87,6 +91,7 @@ class Game():
                         # Show victory screen
                         self.timer.pause()
                         self.audio_manager.play_win_sound()  # Play win sound
+                        self.last_completed_level = 3  # Update last completed level
                         self.victory_menu.display_menu()
                         if not self.playing:  # If playing is False, break the loop
                             break
@@ -95,6 +100,7 @@ class Game():
                         # Show level transition screen
                         self.timer.pause()
                         self.audio_manager.play_win_sound()  # Play win sound for level completion
+                        self.last_completed_level = self.level_manager.current_level_number  # Update last completed level
                         self.level_transition_menu.display_menu()
                         if not self.playing:  # If playing is False, break the loop
                             break

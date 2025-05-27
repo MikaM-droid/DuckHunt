@@ -1,5 +1,7 @@
 import pygame
 
+########################################### Audio Manager ###############################################
+
 class AudioManager:
     def __init__(self):
         # Initialize pygame mixer
@@ -23,10 +25,14 @@ class AudioManager:
         # Flag to track if game over sound has been played
         self.game_over_played = False
         self.win_sound_played = False
+        self.current_sound = None
+
+#----------------------------------------------------------------------------------------------------------
+#Play the menu music
     
     def play_menu_music(self):
         pygame.mixer.music.load(self.menu_music)
-        pygame.mixer.music.play(-1)  # -1 means loop indefinitely
+        pygame.mixer.music.play(-1)  # -1 means loop indefinitely, so it plays the music over and over again
     
     def stop_menu_music(self):
         pygame.mixer.music.stop()
@@ -35,6 +41,7 @@ class AudioManager:
         if not self.win_sound_played:
             self.win_sound.play()
             self.win_sound_played = True
+            self.current_sound = self.win_sound
     
     def play_jump_sound(self):
         self.jump_sound.play()
@@ -43,10 +50,14 @@ class AudioManager:
         if not self.game_over_played:
             self.game_over_sound.play()
             self.game_over_played = True
+            self.current_sound = self.game_over_sound
     
     def play_game_start_sound(self):
         self.game_start_sound.play()
     
     def reset_sound_flags(self):
-        self.game_over_played = False
-        self.win_sound_played = False 
+        # Only reset flags if the current sound has finished playing
+        if self.current_sound and not self.current_sound.get_num_channels():
+            self.game_over_played = False
+            self.win_sound_played = False
+            self.current_sound = None 
