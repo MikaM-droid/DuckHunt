@@ -6,7 +6,7 @@ class UI:
     def __init__(self, screen_width, screen_height, font_path=None):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.ui_height = 100  # UI bar height
+        self.ui_height = 100
 
         # Load font
         if font_path:
@@ -16,14 +16,14 @@ class UI:
 
         # Timer and score tracking
         self.timer = "0:00"
-        self.score = 0
-        self.needed_score = 100  # Default score needed for level 1
+        self.score = 0 # Score of the player
+        self.needed_score = 100 # Default score needed for level 1
 
         # Progress bar settings
-        self.bar_width = 300  # Width of the progress bar
-        self.bar_height = 30
-        self.bar_x = self.screen_width - self.bar_width - 20  # Position on the right side
-        self.bar_y = self.screen_height - self.ui_height + 35
+        self.bar_width = 300  # Width and height of the progress bar
+        self.bar_height = 30    
+        self.bar_x = self.screen_width - self.bar_width - 20  # Position on the right side of the screen
+        self.bar_y = self.screen_height - self.ui_height + 35 # Position on the bottom of the screen
 
 #---------------------------------------------------------------------------------------------------------------------------
 # Update the UI with new values

@@ -3,6 +3,7 @@ import os
 from Assets.Character.player import Player
 from Assets.Animals.animal_manager import AnimalManager
 
+
 ################################################## Levels ###########################################################
 #Level() is the base class for all levels in the game.
 #It contains the draw method, which draws the background on the screen.
