@@ -389,11 +389,16 @@ class LevelTransitionMenu(Menu):
         mainmenux, mainmenuy: Coordinates for Main Menu option
     """
     def __init__(self, game):
+        """
+        Initializes the LevelTransitionMenu.
+        """
         Menu.__init__(self, game)
         self.state = 'Next Level'
         self.nextlevelx, self.nextlevely = self.mid_w, self.mid_h + 30
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def display_menu(self):
         """
@@ -410,6 +415,8 @@ class LevelTransitionMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def move_cursor(self):
         """
@@ -430,6 +437,8 @@ class LevelTransitionMenu(Menu):
             elif self.state == 'Main Menu':
                 self.cursor_rect.midtop = (self.nextlevelx + self.offset, self.nextlevely)
                 self.state = 'Next Level'
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def check_input(self):
         """
@@ -473,6 +482,8 @@ class VictoryMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
         """
         Victory menu display loop.
@@ -488,6 +499,8 @@ class VictoryMenu(Menu):
             self.game.draw_text("Main Menu", 20, self.mainmenux, self.mainmenuy)
             self.draw_cursor()
             self.blit_screen()
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def move_cursor(self):
         """
@@ -508,6 +521,8 @@ class VictoryMenu(Menu):
             elif self.state == 'Main Menu':
                 self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
                 self.state = 'Play Again'
+
+#--------------------------------------------------------------------------------------------------------------------------
 
     def check_input(self):
         """
