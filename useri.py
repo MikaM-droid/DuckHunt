@@ -3,7 +3,23 @@ import pygame
 ############################################## Game UI ###################################################
 
 class UI:
+    """
+    Game UI class that handles the display of the timer, score, and progress bar.
+    
+    Attributes:
+        screen_width: Width of the screen
+        screen_height: Height of the screen
+        ui_height: Height of the UI
+    """
     def __init__(self, screen_width, screen_height, font_path=None):
+        '''
+        Initialize the UI class.
+        
+        Args:
+            screen_width (int): The width of the screen.
+            screen_height (int): The height of the screen.
+            font_path (str, optional): The path to the font file. Defaults to None.
+        '''
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.ui_height = 100
@@ -29,6 +45,14 @@ class UI:
 # Update the UI with new values
 
     def update(self, timer, score, needed_score):
+        """
+        Update the UI with new values.
+        
+        Args:
+            timer (str): The timer value.
+            score (int): The score value.
+            needed_score (int): The needed score value.
+        """	
         self.timer = timer
         self.score = score
         self.needed_score = needed_score
@@ -37,6 +61,12 @@ class UI:
 # Draw the UI elements on the screen
 
     def draw(self, screen):
+        """
+        Draw the UI elements on the screen.
+        
+        Args:
+            screen (pygame.Surface): The screen surface.
+        """
         # Draw UI background
         ui_rect = pygame.Rect(0, self.screen_height - self.ui_height, self.screen_width, self.ui_height)
         pygame.draw.rect(screen, (30, 30, 30), ui_rect)  # Dark background

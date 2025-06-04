@@ -6,7 +6,23 @@ import random
 ######################################### Bird #########################################################
 
 class Bird(Animal):
+    '''
+    Bird class.
+
+    Attributes:
+        x (int): The x coordinate of the bird.
+        y (int): The y coordinate of the bird.
+        speed (int): The speed of the bird.
+        points (int): The points of the bird.
+    '''
     def __init__(self, x, y):
+        '''
+        Initialize the Bird class.
+
+        Args:
+            x (int): The x coordinate of the bird.
+            y (int): The y coordinate of the bird.
+        '''
         super().__init__(x, y, speed=7, points=10)
         # Load and process the sprite sheet
         try:
@@ -42,9 +58,11 @@ class Bird(Animal):
         self.direction_change_chance = 0.03
 
 #--------------------------------------------------------------------------------------------------------------------------
-# Reset speeds to initial values
 
     def reset_speeds(self):
+        '''
+        Reset the speeds to initial values.
+        '''
         self.speed = self.initial_speed
         self.vertical_speed = self.initial_vertical_speed
         self.vertical_direction = random.choice([-1, 1])
@@ -53,6 +71,13 @@ class Bird(Animal):
 # Move the bird, the bird moves up and down, and changes direction randomly
 
     def move(self, screen_width, max_height):
+        '''
+        Move the bird.
+
+        Args:
+            screen_width (int): The width of the screen.
+            max_height (int): The height of the screen.
+        '''
         super().move(screen_width, max_height)
         if not self.is_caught:
             self.y += self.vertical_speed * self.vertical_direction

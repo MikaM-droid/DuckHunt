@@ -5,7 +5,7 @@ from Assets.Animals.animal_manager import AnimalManager
 ######################################### Menu #########################################################
 
 class Menu():
-    """
+    '''
     Base menu class that provides common functionality for all game menus.
     
     Attributes:
@@ -15,7 +15,7 @@ class Menu():
         cursor_rect: Pygame Rect object for menu cursor
         offset: Offset for cursor positioning
         bg_image: Background image for the menu
-    """
+    '''
     def __init__(self, game):
         self.game = game
         self.mid_w, self.mid_h = self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 
@@ -26,15 +26,21 @@ class Menu():
         self.bg_image = pygame.image.load("Assets/bgs/mainimg.jpg")
         self.bg_image = pygame.transform.scale(self.bg_image, (self.game.DISPLAY_W, self.game.DISPLAY_H))
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def draw_cursor(self):
-        """Draws the cursor (*) at its current position."""
+        '''
+        Draws the cursor (*) at its current position.
+        '''
         self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def blit_screen(self):
-        """
+        '''
         Updates the display by blitting the game surface to the window.
         Also updates pygame display and resets key states.
-        """
+        '''
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
         self.game.reset_keys()
@@ -42,7 +48,7 @@ class Menu():
 #######################################    Main menu    ###################################################################
 
 class MainMenu(Menu):
-    """
+    '''
     Main menu of the game with options to start game, view options, credits, or quit.
     
     Attributes:
@@ -51,7 +57,7 @@ class MainMenu(Menu):
         optionsx, optionsy: Coordinates for Options option
         creditsx, creditsy: Coordinates for Credits option
         quitx, quity: Coordinates for Quit option
-    """
+    '''
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = 'Start'
@@ -61,11 +67,13 @@ class MainMenu(Menu):
         self.quitx, self.quity = self.mid_w, self.mid_h + 90
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
-        """
+        '''
         Main menu display loop.
         Handles user input and renders menu options.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -80,11 +88,13 @@ class MainMenu(Menu):
             self.draw_cursor()
             self.blit_screen()
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def move_cursor(self):
-        """
+        '''
         Handles cursor movement between menu options using UP and DOWN keys.
         Updates cursor position and current state accordingly.
-        """
+        '''
         if self.game.DOWN_KEY:
             if self.state == 'Start':
                 self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
@@ -112,11 +122,13 @@ class MainMenu(Menu):
                 self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
                 self.state = 'Options'
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def check_input(self):
-        """
+        '''
         Handles menu option selection and game state transitions.
         Processes START_KEY to navigate between menus or start the game.
-        """
+        '''
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Start':
@@ -147,14 +159,14 @@ class MainMenu(Menu):
 #######################################    Options menu    #################################################################
 
 class OptionsMenu(Menu):
-    """
+    '''
     Options menu for game settings like volume and controls.
     
     Attributes:
         state: Current selected option
         volx, voly: Coordinates for Volume option
         controlsx, controlsy: Coordinates for Controls option
-    """
+    '''
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = 'Volume'
@@ -162,11 +174,13 @@ class OptionsMenu(Menu):
         self.controlsx, self.controlsy = self.mid_w, self.mid_h + 40
         self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
-        """
+        '''
         Options menu display loop.
         Renders options menu and handles user input.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -178,11 +192,13 @@ class OptionsMenu(Menu):
             self.draw_cursor()
             self.blit_screen()
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def check_input(self):
-        """
+        '''
         Handles options menu navigation and selection.
         Processes BACK_KEY to return to main menu and UP/DOWN keys for option selection.
-        """
+        '''
         if self.game.BACK_KEY:
             self.game.curr_menu = self.game.main_menu
             self.game.audio_manager.play_menu_music()  # Start menu music
@@ -202,17 +218,19 @@ class OptionsMenu(Menu):
 #######################################    Credits menu    ###############################################################
 
 class CreditsMenu(Menu):
-    """
+    '''
     Credits menu displaying game credits and author information.
-    """
+    '''
     def __init__(self, game):
         super().__init__(game)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
-        """
+        '''
         Credits menu display loop.
         Shows credits information and handles return to main menu.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -225,17 +243,18 @@ class CreditsMenu(Menu):
             self.game.draw_text('Made by Mikaela Monsma', 15, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 10)
             self.blit_screen()
 
+
 #######################################    Pause menu    ###############################################################
 
 class PauseMenu(Menu):
-    """
+    '''
     Pause menu that appears during gameplay.
     
     Attributes:
         state: Current selected option
         resumex, resumey: Coordinates for Resume option
         mainmenux, mainmenuy: Coordinates for Main Menu option
-    """
+    '''
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = 'Resume'
@@ -243,11 +262,13 @@ class PauseMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.resumex + self.offset, self.resumey)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
-        """
+        '''
         Pause menu display loop.
         Shows pause options and handles user input.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -259,11 +280,13 @@ class PauseMenu(Menu):
             self.draw_cursor()
             self.blit_screen()
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def move_cursor(self):
-        """
+        '''
         Handles cursor movement between pause menu options.
         Updates cursor position and current state based on UP/DOWN key input.
-        """
+        '''
         if self.game.DOWN_KEY:
             if self.state == 'Resume':
                 self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
@@ -279,11 +302,13 @@ class PauseMenu(Menu):
                 self.cursor_rect.midtop = (self.resumex + self.offset, self.resumey)
                 self.state = 'Resume'
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def check_input(self):
-        """
+        '''
         Handles pause menu option selection.
         Processes START_KEY to resume game or return to main menu.
-        """
+        '''
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Resume':
@@ -299,14 +324,14 @@ class PauseMenu(Menu):
 #######################################    Game over menu    ###############################################################
 
 class GameOverMenu(Menu):
-    """
+    '''
     Game over menu displayed when player loses.
     
     Attributes:
         state: Current selected option
         playagainx, playagainy: Coordinates for Play Again option
         mainmenux, mainmenuy: Coordinates for Main Menu option
-    """
+    '''
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = 'Play Again'
@@ -314,11 +339,13 @@ class GameOverMenu(Menu):
         self.mainmenux, self.mainmenuy = self.mid_w, self.mid_h + 50
         self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def display_menu(self):
-        """
+        '''
         Game over menu display loop.
         Shows game over options and handles user input.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -330,11 +357,13 @@ class GameOverMenu(Menu):
             self.draw_cursor()
             self.blit_screen()
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def move_cursor(self):
-        """
+        '''
         Handles cursor movement between game over menu options.
         Updates cursor position and current state based on UP/DOWN key input.
-        """
+        '''
         if self.game.DOWN_KEY:
             if self.state == 'Play Again':
                 self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
@@ -350,11 +379,13 @@ class GameOverMenu(Menu):
                 self.cursor_rect.midtop = (self.playagainx + self.offset, self.playagainy)
                 self.state = 'Play Again'
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def check_input(self):
-        """
+        '''
         Handles game over menu option selection.
         Processes START_KEY to restart game or return to main menu.
-        """
+        '''
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Play Again':
@@ -380,18 +411,18 @@ class GameOverMenu(Menu):
 #######################################    Level Transition Menu    ###############################################################
 
 class LevelTransitionMenu(Menu):
-    """
+    '''
     Menu displayed between levels.
     
     Attributes:
         state: Current selected option
         nextlevelx, nextlevely: Coordinates for Next Level option
         mainmenux, mainmenuy: Coordinates for Main Menu option
-    """
+    '''
     def __init__(self, game):
-        """
+        '''
         Initializes the LevelTransitionMenu.
-        """
+        '''
         Menu.__init__(self, game)
         self.state = 'Next Level'
         self.nextlevelx, self.nextlevely = self.mid_w, self.mid_h + 30
@@ -401,10 +432,10 @@ class LevelTransitionMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def display_menu(self):
-        """
+        '''
         Level transition menu display loop.
         Shows level completion and handles user input.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -419,10 +450,10 @@ class LevelTransitionMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def move_cursor(self):
-        """
+        '''
         Handles cursor movement between level transition menu options.
         Updates cursor position and current state based on UP/DOWN key input.
-        """
+        '''
         if self.game.DOWN_KEY:
             if self.state == 'Next Level':
                 self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
@@ -441,10 +472,10 @@ class LevelTransitionMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def check_input(self):
-        """
+        '''
         Handles level transition menu option selection.
         Processes START_KEY to advance to next level or return to main menu.
-        """
+        '''
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Next Level':
@@ -467,14 +498,14 @@ class LevelTransitionMenu(Menu):
 #######################################    Victory Menu    ###############################################################
 
 class VictoryMenu(Menu):
-    """
+    '''
     Victory menu displayed when player completes all levels.
     
     Attributes:
         state: Current selected option
         playagainx, playagainy: Coordinates for Play Again option
         mainmenux, mainmenuy: Coordinates for Main Menu option
-    """
+    '''
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = 'Play Again'
@@ -485,10 +516,10 @@ class VictoryMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def display_menu(self):
-        """
+        '''
         Victory menu display loop.
         Shows victory message and handles user input.
-        """
+        '''
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -503,10 +534,10 @@ class VictoryMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def move_cursor(self):
-        """
+        '''
         Handles cursor movement between victory menu options.
         Updates cursor position and current state based on UP/DOWN key input.
-        """
+        '''
         if self.game.DOWN_KEY:
             if self.state == 'Play Again':
                 self.cursor_rect.midtop = (self.mainmenux + self.offset, self.mainmenuy)
@@ -525,10 +556,10 @@ class VictoryMenu(Menu):
 #--------------------------------------------------------------------------------------------------------------------------
 
     def check_input(self):
-        """
+        '''
         Handles victory menu option selection.
         Processes START_KEY to restart game or return to main menu.
-        """
+        '''
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Play Again':

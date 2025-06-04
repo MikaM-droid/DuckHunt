@@ -7,7 +7,23 @@ import random
 #This file contains the Mouse class, which is a child of the Animal class.
 
 class Mouse(Animal):
+    '''
+    Mouse class.
+
+    Attributes:
+        x (int): The x coordinate of the mouse.
+        y (int): The y coordinate of the mouse.
+        speed (int): The speed of the mouse.
+        points (int): The points of the mouse.
+    '''
     def __init__(self, x, y):
+        '''
+        Initialize the Mouse class.
+
+        Args:
+            x (int): The x coordinate of the mouse.
+            y (int): The y coordinate of the mouse.
+        '''
         super().__init__(x, y, speed=3, points=5)
         try:
             # Load and process the sprite sheet
@@ -43,7 +59,16 @@ class Mouse(Animal):
         self.direction_change_chance = 0.05
         self.vertical_change_chance = 0.03
 
+#--------------------------------------------------------------------------------------------------------------------------
+
     def move(self, screen_width, max_height):
+        '''
+        Move the mouse across the screen.
+
+        Args:
+            screen_width (int): The width of the screen.
+            max_height (int): The height of the screen.
+        '''	
         if not self.is_caught:
             # Update horizontal position
             self.x += self.speed * self.direction

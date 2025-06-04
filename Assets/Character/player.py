@@ -1,12 +1,25 @@
 import pygame
 
 ######################################### Player #########################################################
-#This file contains the Player class, which is the main character of the game.
+#The player class is the main character of the game.
 #It contains the move method, which moves the player across the screen.
 #It also contains the draw method, which draws the player on the screen.
 
 class Player():
+    '''
+    Player class.
+    '''
     def __init__(self, x, y, screen_width, screen_height, game):
+        '''
+        Initialize the Player class.
+
+        Args:
+            x (int): The x coordinate of the player.
+            y (int): The y coordinate of the player.
+            screen_width (int): The width of the screen.
+            screen_height (int): The height of the screen.
+            game (Game): The game instance.
+        '''
         self.x = x
         self.y = y
         self.screen_width = screen_width
@@ -64,8 +77,15 @@ class Player():
         self.initial_jump_y = 0
 
 #--------------------------------------------------------------------------------------------------------------------------
+#Moves the player across the screen
 
     def move(self, keys):
+        '''
+        Move the player across the screen.
+
+        Args:
+            keys (pygame.key): The keys pressed.
+        '''
         is_moving = False
         
         # Horizontal movement
@@ -125,4 +145,10 @@ class Player():
 #Draws the player on the screen
 
     def draw(self, screen):
+        '''
+        Draw the player on the screen.
+
+        Args:
+            screen (pygame.Surface): The screen surface.
+        '''
         screen.blit(self.image, self.rect)

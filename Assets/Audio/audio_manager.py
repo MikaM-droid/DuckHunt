@@ -3,7 +3,13 @@ import pygame
 ########################################### Audio Manager ###############################################
 
 class AudioManager:
+    '''
+    Audio manager class.
+    '''
     def __init__(self):
+        '''
+        Initialize the AudioManager class.
+        '''
         # Initialize pygame mixer
         pygame.mixer.init()
         
@@ -28,53 +34,66 @@ class AudioManager:
         self.current_sound = None
 
 #----------------------------------------------------------------------------------------------------------
-#Play the menu music
-    
+
     def play_menu_music(self):
+        '''
+        Play the menu music.
+        '''
         pygame.mixer.music.load(self.menu_music)
         pygame.mixer.music.play(-1)  # -1 means loop indefinitely, so it plays the music over and over again
 
 #----------------------------------------------------------------------------------------------------------
-#Stop the menu music
 
     def stop_menu_music(self):
+        '''
+        Stop the menu music.
+        '''
         pygame.mixer.music.stop()
 
 #----------------------------------------------------------------------------------------------------------
-#Play the win sound
 
     def play_win_sound(self):
+        '''
+        Play the win sound.
+        '''
         if not self.win_sound_played:
             self.win_sound.play()
             self.win_sound_played = True
             self.current_sound = self.win_sound
 
 #----------------------------------------------------------------------------------------------------------
-#Play the jump sound
 
     def play_jump_sound(self):
+        '''
+        Play the jump sound.
+        '''
         self.jump_sound.play()
 
 #----------------------------------------------------------------------------------------------------------
-#Play the game over sound
 
     def play_game_over_sound(self):
+        '''
+        Play the game over sound.
+        '''
         if not self.game_over_played:
             self.game_over_sound.play()
             self.game_over_played = True
             self.current_sound = self.game_over_sound
 
 #----------------------------------------------------------------------------------------------------------
-#Play the game start sound
 
     def play_game_start_sound(self):
+        '''
+        Play the game start sound.
+        '''
         self.game_start_sound.play()
 
 #----------------------------------------------------------------------------------------------------------
-#Reset the sound flags
 
     def reset_sound_flags(self):
-        # Only reset flags if the current sound has finished playing
+        '''
+        Reset the sound flags.
+        '''
         if self.current_sound and not self.current_sound.get_num_channels():
             self.game_over_played = False
             self.win_sound_played = False
