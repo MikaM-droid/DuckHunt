@@ -24,6 +24,7 @@ class Level:
         '''
         self.game = game
         full_path = os.path.join("Assets", "bgs", bg_image_path)
+        self.background = pygame.image.load(full_path)
         self.background = pygame.transform.scale(self.background, (game.DISPLAY_W, game.DISPLAY_H))
 
 #--------------------------------------------------------------------------------------------------------------------------
